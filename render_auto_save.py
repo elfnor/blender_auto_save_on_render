@@ -114,9 +114,9 @@ def auto_save_render(scene):
         save_name = basename(save_name)
         link_text = save_name.rpartition('.')[0]
         text = '\n**{}** '.format(link_text) \
-                 + datetime.now().strftime('{%Y-%m-%d %H:%M}\n') \
-                 + '![]({})\n'.format(save_name) \
-                 + 'Render time: {}\n'.format(render_time)
+                 + datetime.now().strftime('{%Y-%m-%d %H:%M}  \n') \
+                 + '![]({})  \n'.format(save_name) \
+                 + 'Render time: {}  \n'.format(render_time)
             
         bpy.data.texts[md_textname].write(text)
  
