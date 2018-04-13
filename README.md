@@ -51,4 +51,4 @@ Render time: 0:00:20.045838
 Render time: 0:00:20.356762
 ```
 
-See [blog post]() for more info.
+See [blog post](http://elfnor.com/update-to-blender-auto-save-add-on.html) for more info.
