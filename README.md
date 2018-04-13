@@ -16,30 +16,39 @@ This version adds an option to also auto save .blend file after render, and to c
 On the first render with the Auto Save Render add-on enabled, and "with log file" checked, the add-on will add a text-data-block called "save log" to the Blender file. To see this after the first render use the "Browse text to be linked" drop down to make the "save log" the active text block. Add any comments desired. To save a copy externally to Blender use the "Text > Save As" menu. The default save name has been set to "blendfilebasename_log.md". This can be changed but the markdown file link format requires the log file be in the same folder as the auto-saved images.
 
 The add-on settings are found on the Render panel. The default save name has been set to "blendfilebasename_log.md". This can be changed but the markdown file link format requires the log file be in the same folder as the auto-saved images.
+
 ![screenshot](screen.png)
 
 With "Auto Save Image" and "with .blend" set and the file "\Documents\test.blend" open, after rendering the following files will be created  
 
-\Documents\auto_saves\test_001.png  
-\Documents\auto_saves\test_001.blend  
+`\Documents\auto_saves\test_001.png`
+`\Documents\auto_saves\test_001.blend`  
 
 If "subfolder" is also set the files will be created in a sub-folder named after the blend file.  
 
-\Documents\auto_saves\test\test_001.png  
-\Documents\auto_saves\test\test_001.blend  
+`\Documents\auto_saves\test\test_001.png`  
+`\Documents\auto_saves\test\test_001.blend`
 
 The version number will be incremented with each render.  
 
 It is up to the user to make sure any additional files required such as texture images have been packed into the blend file.  
 
-File>External Data>Pack All into .blend
+`File>External Data>Pack All into .blend`
 
 After three renders the log file might look like this
 
 ```
-demo log file
+**celadon_glaze_001** {2018-04-13 16:51}
+![](celadon_glaze_001.png)
+Render time: 0:00:20.183531
+
+**celadon_glaze_002** {2018-04-13 16:57}
+![](celadon_glaze_002.png)
+Render time: 0:00:20.045838
+
+**celadon_glaze_003** {2018-04-13 17:11}
+![](celadon_glaze_003.png)
+Render time: 0:00:20.356762
 ```
 
 See [blog post]() for more info.
-
-#TODO Add render time, either by retrieving from Blender or using time.time
