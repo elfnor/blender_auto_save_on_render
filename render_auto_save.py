@@ -43,10 +43,18 @@ from os.path import dirname, exists, join
 from bpy.path import basename
 from os import mkdir, listdir
 from re import findall
+from datetime import datetime
 
+TIMER = None
+
+@persistent
+def start_timer(scene):
+    global TIMER
+    TIMER = datetime.now()
 
 @persistent
 def auto_save_render(scene):
+    render_time = datetime.now() - TIMER
     if not scene.save_after_render or not bpy.data.filepath:
         return
     rndr = scene.render
@@ -60,9 +68,10 @@ def auto_save_render(scene):
     blendname = basename(bpy.data.filepath).rpartition('.')[0]
     filepath = dirname(bpy.data.filepath) + '/auto_saves'
     
+    
     if not exists(filepath):
         mkdir(filepath)
-        
+  
     if scene.auto_save_subfolders:
         filepath = join(filepath, blendname)
         if not exists(filepath):
@@ -95,7 +104,22 @@ def auto_save_render(scene):
     if scene.save_blend:
     	save_name_blend = join(filepath, blendname) + '_' + str(highest+1).zfill(3) + '.blend'
     	print('Blend_Save:',save_name_blend)
-    	bpy.ops.wm.save_as_mainfile(filepath=save_name_blend, copy=True)	
+    	bpy.ops.wm.save_as_mainfile(filepath=save_name_blend, copy=True)
+
+    if scene.logfile:
+        md_textname = 'save log'
+        if not md_textname in bpy.data.texts:
+            bpy.data.texts.new(md_textname)
+            bpy.data.texts[md_textname].filepath = join(filepath, blendname + '_log.md') 
+        save_name = basename(save_name)
+        link_text = save_name.rpartition('.')[0]
+        text = '\n**{}** '.format(link_text) \
+                 + datetime.now().strftime('{%Y-%m-%d %H:%M}\n') \
+                 + '![]({})\n'.format(save_name) \
+                 + 'Render time: {}\n'.format(render_time)
+            
+        bpy.data.texts[md_textname].write(text)
+ 
     
     rndr.image_settings.file_format = original_format
 
@@ -109,8 +133,9 @@ def auto_save_UI(self, context):
     col.prop(context.scene, 'save_blend', text='with .blend', toggle=False)	
 
     col = split.column()	
-    col.prop(context.scene, 'auto_save_subfolders', toggle=False)
+    col.prop(context.scene, 'auto_save_subfolders', text='in subfolder', toggle=False)
     col.prop(context.scene, 'auto_save_format', text='as', expand=False)
+    col.prop(context.scene, 'logfile', text='with log file', toggle=False)
     
 def register():
     bpy.types.Scene.save_after_render = BoolProperty(
@@ -133,6 +158,12 @@ def register():
                     name='subfolder',
                     default=False,
                     description='Save into individual subfolders per blend name')
+    bpy.types.Scene.logfile = BoolProperty(
+                    name='logfile',
+                    default=False,
+                    description='Log saves to text file')
+
+    bpy.app.handlers.render_pre.append(start_timer)
     bpy.app.handlers.render_post.append(auto_save_render)
     bpy.types.RENDER_PT_render.append(auto_save_UI)
     
@@ -141,6 +172,7 @@ def unregister():
     del(bpy.types.Scene.auto_save_format)
     del(bpy.types.Scene.auto_save_subfolders)
     bpy.app.handlers.render_post.remove(auto_save_render)
+    bpy.app.handlers.render_pre.remove(start_timer)
     bpy.types.RENDER_PT_render.remove(auto_save_UI)
 
 if __name__ == "__main__":
