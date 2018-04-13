@@ -21,13 +21,13 @@ The add-on settings are found on the Render panel. The default save name has bee
 
 With "Auto Save Image" and "with .blend" set and the file "\Documents\test.blend" open, after rendering the following files will be created  
 
-`\Documents\auto_saves\test_001.png`
-`\Documents\auto_saves\test_001.blend`  
+`\Documents\auto_saves\test_001.png`  
+`\Documents\auto_saves\test_001.blend`    
 
 If "subfolder" is also set the files will be created in a sub-folder named after the blend file.  
 
-`\Documents\auto_saves\test\test_001.png`  
-`\Documents\auto_saves\test\test_001.blend`
+`\Documents\auto_saves\test\test_001.png`    
+`\Documents\auto_saves\test\test_001.blend`  
 
 The version number will be incremented with each render.  
 
